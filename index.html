@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>異世界転生キャラ性格診断</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Mochiy+Pop+One&family=Zen+Maru+Gothic:wght@400;700&display=swap" rel="stylesheet">
+    
+    <!-- Google AdSense Code (optional) -->
+    
+    <style>
+        body {
+            font-family: 'Zen Maru Gothic', sans-serif;
+        }
+        h1, h2, h3, .font-display {
+            font-family: 'Mochiy Pop One', sans-serif;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+        }
+        .fade-in {
+            animation: fadeIn 0.5s ease-in-out;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .start-bg {
+            background-image: linear-gradient(to top, #ff9a9e 0%, #fecfef 99%, #fecfef 100%);
+        }
+        .question-bg {
+             background-image: linear-gradient(120deg, #d4fc79 0%, #96e6a1 100%);
+        }
+        .result-bg {
+            background-image: linear-gradient(to top, #a18cd1 0%, #fbc2eb 100%);
+        }
+    </style>
+</head>
+<body class="bg-gray-100 text-gray-800 transition-colors duration-500">
+
+    <div id="app" class="max-w-xl mx-auto p-4 min-h-screen flex flex-col justify-center">
+
+        <!-- Start Screen -->
+        <div id="start-screen" class="text-center p-8 rounded-2xl shadow-lg fade-in start-bg">
+            <h1 class="text-3xl md:text-4xl font-bold text-white mb-4">異世界転生キャラ性格診断</h1>
+            <p class="text-white mb-6">
+                あなたが異世界に転生したら…<br>どんなキャラクターになるか診断します！<br>
+                <span class="font-bold">10個の質問に答えてね！</span>
+            </p>
+            <img src="https://my-personalities.com/images/leo.png" alt="診断キャラクターのイメージ" class="mx-auto mb-8 rounded-lg w-48 h-48 object-cover">
+            <button id="start-button" class="bg-white text-pink-500 font-bold py-3 px-10 rounded-full shadow-lg hover:bg-pink-100 transform hover:scale-105 transition-all duration-300 whitespace-nowrap">
+                診断をはじめる！
+            </button>
+        </div>
+
+        <!-- Question Screen -->
+        <div id="question-screen" class="hidden fade-in question-bg p-6 rounded-2xl shadow-lg">
+            <div id="progress-bar" class="w-full bg-gray-200 rounded-full h-2.5 mb-4">
+                <div class="bg-green-400 h-2.5 rounded-full" style="width: 0%"></div>
+            </div>
+            <h2 id="question-text" class="text-xl md:text-2xl font-bold mb-6 text-center text-white"></h2>
+            <div id="options-container" class="grid grid-cols-1 gap-4">
+            </div>
+        </div>
+
+        <!-- Result Screen -->
+        <div id="result-screen" class="hidden text-center p-6 rounded-2xl shadow-lg fade-in result-bg">
+            <h2 class="text-2xl font-bold text-white mb-2">
+                <span class="sm:hidden">あなたの<br>転生キャラは…</span>
+                <span class="hidden sm:inline">あなたの転生キャラは…</span>
+            </h2>
+            <div class="bg-white p-6 rounded-xl shadow-inner">
+                <h3 id="character-name" class="text-3xl font-display text-purple-500 mb-4 whitespace-nowrap text-ellipsis overflow-hidden px-2" style="font-size: clamp(1.5rem, 8vw, 2rem);"></h3>
+                <img id="character-image" src="" alt="診断結果キャラクター" class="mx-auto mb-4 rounded-lg w-48 h-48 object-cover border-4 border-pink-300">
+                <p id="character-description" class="text-gray-700 mb-4"></p>
+                <div class="bg-purple-100 p-3 rounded-lg">
+                     <p id="character-hashtag" class="text-purple-700 font-bold"></p>
+                </div>
+            </div>
+
+            <!-- Ad Space (optional) -->
+            <div class="mt-6">
+            </div>
+
+            <div class="mt-6 flex flex-col items-center gap-4">
+                 <button id="share-button" class="bg-pink-500 text-white font-bold py-3 px-10 rounded-full shadow-lg hover:bg-pink-600 transform hover:scale-105 transition-all duration-300 whitespace-nowrap">
+                    結果をシェアする
+                </button>
+                <button id="retry-button" class="bg-white text-gray-600 font-bold py-2 px-8 rounded-full shadow-md hover:bg-gray-200 transition-all duration-300 whitespace-nowrap">
+                    もう一度診断する
+                </button>
+            </div>
+        </div>
+        
+        <footer class="text-center mt-8 mb-4">
+            <a href="./privacy_policy.html" class="text-sm text-gray-500 hover:underline">プライバシーポリシー</a>
+        </footer>
+
+    </div>
+
+    <script>
+        const characters = [
+            { id: 0, name: "守護ライオンの「レオ」", description: "正義感が強く、仲間を守るリーダータイプ。ちょっと頑固だけど頼りになる存在。責任感が人一倍強い。", hashtags: "#リーダーシップ #守りたいこの笑顔", imageUrl: "https://my-personalities.com/images/leo.png" },
+            { id: 1, name: "拳法家の「くまモンク」", description: "努力家でストイック。決めたことは最後までやり遂げる。内なる情熱を秘めている。実は甘いものに目がない。", hashtags: "#努力家 #不言実行", imageUrl: "https://my-personalities.com/images/kumamonk.png" },
+            { id: 2, name: "お宝ハンター「フェネック」", description: "好奇心旺盛でフットワークが軽い。新しいものや楽しいことが大好き。いたずら好きで、人を驚かせるのが得意。", hashtags: "#好奇心旺盛 #トレンドセッター", imageUrl: "https://my-personalities.com/images/fennec.png" },
+            { id: 3, name: "癒しの「アルパカメイジ」", description: "優しくて思いやりがある癒し系。人の話を聞くのが得意で、いつもみんなをサポートしてくれる。少しおっとりしている。", hashtags: "#癒し系 #聞き上手", imageUrl: "https://my-personalities.com/images/alpacamage.png" },
+            { id: 4, name: "気まぐれ「クロネコウィッチ」", description: "ミステリアスで独特の世界観を持っている。一人の時間が好きだけど、実は寂しがり屋。ツンデレな一面も。", hashtags: "#ミステリアス #ツンデレ", imageUrl: "https://my-personalities.com/images/kuronekowitch.png" },
+            { id: 5, name: "夢見る「ユニコーンサモナー」", description: "想像力豊かでロマンチスト。理想が高く、自分の信じる世界を大切にする。少し天然なところも可愛い。", hashtags: "#ロマンチスト #夢かわいい", imageUrl: "https://my-personalities.com/images/unicorn-summoner.png" },
+            { id: 6, name: "飛翔ドラグーン「リルドラ」", description: "高い目標に向かって一直線。プライドが高いけど、仲間との絆を大事にする。たまにドジるのがチャームポイント。", hashtags: "#目標達成 #ギャップ萌え", imageUrl: "https://my-personalities.com/images/lildra.png" },
+            { id: 7, name: "忍びの「ホークアイ」", description: "冷静沈着でポーカーフェイス。情報収集が得意で、影からみんなを支える。実は面白いことが大好き。", hashtags: "#クール #縁の下の力持ち", imageUrl: "https://my-personalities.com/images/hawkeye.png" },
+            { id: 8, name: "忠犬サムライ「シバマル」", description: "義理人情に厚く、誠実。古風な考え方を持つが、一度決めたことは曲げない信念の持ち主。", hashtags: "#誠実 #一本気", imageUrl: "https://my-personalities.com/images/shibamaru.png" },
+            { id: 9, name: "情熱ダンサー「フラミン」", description: "明るく社交的で、常に輪の中心にいる人気者。表現力豊かで、周りをハッピーにする天才。", hashtags: "#ムードメーカー #表現力", imageUrl: "https://my-personalities.com/images/flamin.png" },
+            { id: 10, name: "歌うたい「カナリアン」", description: "感受性が豊かで芸術家肌。言葉や音楽で自分の気持ちを伝えるのが得意。少しセンチメンタルになりやすい。", hashtags: "#芸術家肌 #エモい", imageUrl: "https://my-personalities.com/images/canarian.png" },
+            { id: 11, name: "孤高の「ホークアーチャー」", description: "独立心が強く、自分のペースを大事にする。集中力が高く、狙った獲物は逃さない。一匹狼タイプ。", hashtags: "#マイペース #集中力", imageUrl: "https://my-personalities.com/images/hawkarcher.png" },
+            { id: 12, name: "魔法剣士「コンすけ」", description: "頭の回転が速く、要領がいい。理論と直感の両方を使いこなすハイブリッドタイプ。少し計算高いところも。", hashtags: "#スマート #万能型", imageUrl: "https://my-personalities.com/images/konsuke.png" },
+            { id: 13, name: "研究家「ハムケミスト」", description: "探究心が強く、物事を分析するのが好き。困っている人を放っておけないお人好し。アイテム集めが趣味。", hashtags: "#分析家 #お人好し", imageUrl: "https://my-personalities.com/images/hamchemist.png" },
+            { id: 14, name: "のんびり「パンダジオ」", description: "自然体でマイペース。周りの空気を読むのが得意で、調和を大切にする平和主義者。美味しいものに目がない。", hashtags: "#平和主義 #自然体", imageUrl: "https://my-personalities.com/images/pandageo.png" },
+            { id: 15, name: "突撃「ウリボウサーカー」", description: "パワフルで情熱的。考えるより先に行動するタイプ。一度火がつくと誰にも止められない。裏表がない。", hashtags: "#情熱的 #行動力", imageUrl: "https://my-personalities.com/images/uribourserker.png" },
+            { id: 16, name: "カリスマ「ウルフマスター」", description: "動物や自然を愛する心優しいリーダー。仲間からの信頼が厚く、みんなをまとめるのがうまい。面倒見がいい。", hashtags: "#カリスマ #面倒見がいい", imageUrl: "https://my-personalities.com/images/wolfmaster.png" },
+            { id: 17, name: "学びの「カメレオンラーナー」", description: "学習意欲が高く、なんでも吸収しようとするスポンジタイプ。色々なことに興味を持ち、多趣味。", hashtags: "#勉強家 #多趣味", imageUrl: "https://my-personalities.com/images/chameleon-learner.png" },
+            { id: 18, name: "ものまね「パロットマイム」", description: "コミュニケーション能力が高く、誰とでもすぐに仲良くなれる。相手に合わせるのが得意で、場の空気を読む天才。", hashtags: "#コミュ力おばけ #共感力", imageUrl: "https://my-personalities.com/images/parrotmime.png" },
+            { id: 19, name: "神秘の「アルマジロラクル」", description: "直感力に優れ、スピリチュアルなことに関心がある。不思議な雰囲気を持っており、的を射たアドバイスをくれる。", hashtags: "#直感力 #スピリチュアル", imageUrl: "https://my-personalities.com/images/armadilloracle.png" },
+        ];
+
+        const allQuestions = {
+            action: [
+                { question: "チームのリーダーを任されたら、どうする？", options: [{ text: "みんなを引っ張る！", points: { 0: 3, 16: 2, 6: 1 } }, { text: "適任の人に譲る", points: { 7: 2, 3: 1, 14: 1 } }, { text: "どうしようか悩む", points: { 5: 2, 10: 1 } }, { text: "とりあえずやってみる", points: { 15: 2, 2: 1, 1: 1 } }] },
+                { question: "誰もやりたがらない面倒なこと、どうする？", options: [{ text: "自分がやるしかない", points: { 8: 3, 0: 2, 1: 1 } }, { text: "みんなで分担しようと提案", points: { 16: 3, 18: 2 } }, { text: "気づかないふり…", points: { 4: 2, 2: 1 } }, { text: "効率的な方法を考える", points: { 12: 3, 7: 2, 13: 1 } }] },
+                { question: "目の前に巨大なドラゴンが！どうする？", options: [{ text: "仲間を守るため前に出る", points: { 0: 3, 8: 2 } }, { text: "弱点を探して分析する", points: { 7: 3, 12: 2, 17: 1 } }, { text: "とにかく全力で戦う！", points: { 1: 3, 15: 3, 6: 1 } }, { text: "戦わずに済む方法を探す", points: { 3: 2, 14: 2, 19: 1 } }] },
+                { question: "目標達成のために一番大事なのは？", options: [{ text: "折れない心", points: { 1: 3, 6: 2, 8: 2 } }, { text: "周りの協力", points: { 16: 3, 0: 2, 18: 1 } }, { text: "緻密な計画", points: { 7: 3, 12: 2 } }, { text: "楽しむ気持ち", points: { 9: 2, 2: 2, 15: 1 } }] },
+                { question: "あなたの「正義」とは？", options: [{ text: "ルールや秩序を守ること", points: { 8: 3, 0: 2 } }, { text: "弱いものを助けること", points: { 3: 2, 16: 2 } }, { text: "自分の信念を貫くこと", points: { 1: 2, 6: 2, 11: 1 } }, { text: "みんなが笑顔でいること", points: { 9: 2, 14: 2, 18: 1 } }] },
+                { question: "絶体絶命のピンチ！最初にどう動く？", options: [{ text: "冷静に状況を把握する", points: { 7: 3, 12: 2, 0: 1 } }, { text: "仲間を安全な場所に誘導する", points: { 0: 3, 16: 2, 3: 1 } }, { text: "とにかく目の前の敵に突撃！", points: { 15: 3, 1: 2, 6: 1 } }, { text: "意外な方法で切り抜ける", points: { 2: 3, 4: 1, 17: 1 } }] },
+                { question: "もし武器を選ぶなら？", options: [{ text: "王道の剣と盾", points: { 0: 3, 8: 2 } }, { text: "己の拳", points: { 1: 3 } }, { text: "トリッキーな短剣や弓", points: { 2: 2, 11: 2, 7: 1 } }, { text: "強力な魔法の杖", points: { 4: 2, 5: 2, 3: 1 } }] },
+                { question: "友達が誰かにからかわれている！どうする？", options: [{ text: "すぐに割って入る", points: { 0: 3, 15: 2, 8: 1 } }, { text: "先生や大人に知らせる", points: { 7: 2, 14: 1 } }, { text: "後で友達を慰める", points: { 3: 3, 10: 1 } }, { text: "うまく話をそらして助ける", points: { 18: 2, 12: 2 } }] },
+                { question: "失敗した時、どう立ち直る？", options: [{ text: "倍練習して次こそは！", points: { 1: 3, 6: 2, 8: 1 } }, { text: "仲間と話して元気をもらう", points: { 16: 2, 9: 2, 18: 1 } }, { text: "しばらく一人で落ち込む", points: { 10: 2, 4: 2, 11: 1 } }, { text: "失敗の原因を分析する", points: { 13: 2, 7: 2, 17: 1 } }] },
+                { question: "体育祭で出るならどの種目？", options: [{ text: "花形のリレー", points: { 6: 3, 15: 2, 2: 1 } }, { text: "みんなで協力する大縄跳び", points: { 0: 2, 18: 2 } }, { text: "応援団で盛り上げる！", points: { 9: 3, 16: 2 } }, { text: "自分のペースで走る長距離走", points: { 1: 2, 11: 2 } }] },
+                { question: "オフェンスとディフェンス、どっちが得意？", options: [{ text: "攻撃は最大の防御！", points: { 15: 3, 6: 2, 1: 1 } }, { text: "仲間をがっちり守る", points: { 0: 3, 8: 2 } }, { text: "カウンター狙いの策略家", points: { 7: 3, 12: 2, 2: 1 } }, { text: "サポートに徹する", points: { 3: 3, 13: 1, 16: 1 } }] },
+                { question: "あなたの戦いのモットーは？", options: [{ text: "一撃必殺", points: { 1: 3, 8: 2 } }, { text: "諦めたらそこで試合終了", points: { 6: 2, 0: 1 } }, { text: "逃げるが勝ち", points: { 2: 2, 14: 1 } }, { text: "戦いは数だよ", points: { 16: 2, 7: 1 } }] },
+                { question: "強力なライバルが現れた！どう思う？", options: [{ text: "燃えてくる！", points: { 6: 3, 1: 2, 15: 1 } }, { text: "正直ちょっと怖い", points: { 5: 2, 3: 1 } }, { text: "相手の能力を分析する", points: { 7: 3, 17: 2, 12: 1 } }, { text: "いつか仲間になりたい", points: { 16: 2, 0: 1 } }] },
+                { question: "もし国を治めるならどんな国にしたい？", options: [{ text: "規律と伝統を重んじる国", points: { 8: 3, 0: 1 } }, { text: "自由で活気のある国", points: { 2: 3, 9: 2, 15: 1 } }, { text: "平和で穏やかな国", points: { 14: 3, 3: 2 } }, { text: "魔法と科学が発展した国", points: { 12: 2, 13: 2, 17: 1 } }] },
+                { question: "危険な単独任務。引き受ける？", options: [{ text: "もちろん！腕がなる", points: { 11: 3, 7: 2, 1: 1 } }, { text: "仲間と一緒じゃないと嫌だ", points: { 0: 3, 16: 2 } }, { text: "成功報酬による", points: { 2: 2, 12: 1 } }, { text: "危険すぎるのはちょっと…", points: { 14: 2, 3: 1, 5: 1 } }] },
+                { question: "体力と知力、手に入れるならどっち？", options: [{ text: "圧倒的な体力", points: { 1: 3, 15: 2, 8: 1 } }, { text: "天才的な知力", points: { 7: 3, 12: 2, 13: 2, 17: 1 } }, { text: "バランスが大事", points: { 0: 2, 6: 1 } }, { text: "それよりコミュ力が欲しい", points: { 18: 3, 9: 2 } }] },
+                { question: "大きな決断をするとき、どうする？", options: [{ text: "直感を信じる", points: { 19: 3, 15: 2, 5: 1 } }, { text: "信頼できる人に相談する", points: { 0: 2, 16: 2, 3: 1 } }, { text: "メリットとデメリットを書き出す", points: { 7: 3, 12: 2, 13: 1 } }, { text: "ギリギリまで悩む", points: { 10: 2, 14: 1 } }] },
+                { question: "あなたの隠れた才能は？", options: [{ text: "運動神経が実はいい", points: { 1: 2, 6: 1, 11: 1 } }, { text: "手先が器用", points: { 13: 2, 7: 1 } }, { text: "人の心を動かす言葉", points: { 10: 3, 9: 2, 16: 1 } }, { text: "危険を察知する能力", points: { 19: 2, 2: 1 } }] },
+                { question: "岩に刺さった伝説の剣。どうする？", options: [{ text: "全力で引き抜いてみる！", points: { 15: 3, 0: 2, 1: 1 } }, { text: "選ばれた者しか抜けないはず…", points: { 5: 2, 8: 1 } }, { text: "何か仕掛けがないか調べる", points: { 7: 3, 13: 2, 2: 1 } }, { text: "とりあえず記念撮影", points: { 9: 2, 18: 1 } }] },
+                { question: "大事な任務と仲間を助けるの、どっちを優先？", options: [{ text: "どんな時も仲間が最優先！", points: { 0: 3, 16: 2, 3: 1 } }, { text: "任務を遂行するのが使命", points: { 8: 3, 7: 2, 1: 1 } }, { text: "両立させる方法を探す", points: { 12: 3, 6: 1 } }, { text: "その時の状況による", points: { 11: 2, 14: 1 } }] },
+            ],
+            social: [
+                { question: "初対面の人が多い場所、得意？", options: [{ text: "得意！すぐ話せる", points: { 9: 3, 18: 3, 2: 1 } }, { text: "ちょっと苦手…", points: { 4: 2, 10: 1, 7: 1 } }, { text: "相手によるかな", points: { 14: 2, 3: 1 } }, { text: "グループの隅っこにいる", points: { 11: 2, 5: 1 } }] },
+                { question: "友達の誕生日！どんなお祝いをしたい？", options: [{ text: "盛大なサプライズパーティー", points: { 9: 3, 2: 2 } }, { text: "欲しがっていた物をプレゼント", points: { 7: 2, 13: 1 } }, { text: "二人で静かにお祝い", points: { 3: 2, 10: 2, 4: 1 } }, { text: "手作りのプレゼント", points: { 13: 2, 5: 1 } }] },
+                { question: "友達との会話で、あなたの役割は？", options: [{ text: "聞き役が多い", points: { 3: 3, 14: 2, 7: 1 } }, { text: "盛り上げ役！", points: { 9: 3, 18: 2, 15: 1 } }, { text: "ツッコミ役かも", points: { 12: 2, 8: 1 } }, { text: "面白い話を提供する", points: { 2: 2, 17: 1 } }] },
+                { question: "あなたにとって「仲間」とは？", options: [{ text: "一緒に戦う家族", points: { 0: 3, 8: 2, 16: 2 } }, { text: "高め合えるライバル", points: { 6: 3, 1: 2 } }, { text: "楽しい時間を共有する友達", points: { 9: 2, 18: 2 } }, { text: "そっと見守ってくれる存在", points: { 3: 2, 11: 1, 4: 1 } }] },
+                { question: "人からよく言われるのは？", options: [{ text: "「しっかり者だね」", points: { 0: 2, 8: 2, 7: 1 } }, { text: "「面白いね」", points: { 2: 2, 9: 2, 18: 1 } }, { text: "「優しいね」", points: { 3: 3, 16: 2, 14: 1 } }, { text: "「不思議だね」", points: { 4: 3, 5: 2, 19: 2, 10: 1 } }] },
+                { question: "落ち込んでいる友達。どうやって励ます？", options: [{ text: "そばにいて話を聞く", points: { 3: 3, 14: 1 } }, { text: "気分転換に遊びに誘う", points: { 9: 3, 2: 2 } }, { text: "的確なアドバイスをする", points: { 12: 2, 7: 1 } }, { text: "美味しいものを差し入れする", points: { 13: 2, 16: 1 } }] },
+                { question: "どんな人を「すごい！」と思う？", options: [{ text: "夢に向かって努力してる人", points: { 1: 3, 6: 2 } }, { text: "いつも自然体な人", points: { 14: 2, 11: 1 } }, { text: "誰にでも優しい人", points: { 3: 3, 16: 2 } }, { text: "ユニークな発想を持つ人", points: { 5: 2, 4: 2, 17: 1 } }] },
+                { question: "文化祭、何をする？", options: [{ text: "ステージでダンスや演奏！", points: { 9: 3, 10: 2 } }, { text: "クラスをまとめる実行委員", points: { 0: 3, 16: 1 } }, { text: "お化け屋敷の企画", points: { 4: 2, 2: 1, 7: 1 } }, { text: "カフェの店員さん", points: { 3: 2, 18: 2, 14: 1 } }] },
+                { question: "王様主催の舞踏会に招待された！", options: [{ text: "ワクワク！目立っちゃう！", points: { 9: 3, 5: 1 } }, { text: "マナーが心配…", points: { 8: 2, 7: 1 } }, { text: "美味しい料理が楽しみ", points: { 14: 2, 1: 1 } }, { text: "隅っこで人間観察", points: { 4: 2, 11: 2, 13: 1 } }] },
+                { question: "グループと個人、どっちで行動するのが好き？", options: [{ text: "断然グループ！", points: { 18: 3, 9: 2, 16: 1 } }, { text: "一人が好き", points: { 11: 3, 4: 2, 1: 1 } }, { text: "気の合う２、３人がいい", points: { 3: 2, 10: 2, 14: 1 } }, { text: "目的による", points: { 12: 2, 7: 1, 0: 1 } }] },
+                { question: "感謝の気持ち、どう伝える？", options: [{ text: "ストレートに「ありがとう！」", points: { 15: 2, 9: 1 } }, { text: "手紙やメッセージで", points: { 10: 3, 5: 1 } }, { text: "プレゼントを贈る", points: { 3: 2, 13: 1 } }, { text: "態度や行動で示す", points: { 8: 3, 1: 2, 0: 1 } }] },
+                { question: "SNSでのあなたのアカウントは？", options: [{ text: "日常を投稿するキラキラアカウント", points: { 9: 3, 2: 1 } }, { text: "趣味全開の裏アカウント", points: { 4: 2, 17: 2, 13: 1 } }, { text: "見る専門のアカウント", points: { 7: 2, 11: 1 } }, { text: "ポエムとか書いちゃうエモアカウント", points: { 10: 3, 5: 2 } }] },
+                { question: "転校生がクラスに来た！どうする？", options: [{ text: "真っ先に話しかけに行く", points: { 18: 3, 9: 2, 16: 1 } }, { text: "遠くから様子をうかがう", points: { 11: 2, 4: 1 } }, { text: "困ってそうだったら助ける", points: { 3: 2, 0: 1 } }, { text: "周りの子が話しかけるのを待つ", points: { 14: 2, 10: 1 } }] },
+                { question: "苦手な人と、どう付き合う？", options: [{ text: "なるべく距離を置く", points: { 11: 3, 4: 2 } }, { text: "表面上はうまくやる", points: { 18: 2, 12: 2, 7: 1 } }, { text: "相手の良いところを探す", points: { 3: 2, 16: 1 } }, { text: "苦手とかあまりないかも", points: { 9: 2, 14: 1 } }] },
+                { question: "助けを求めるのは得意？", options: [{ text: "得意！すぐ頼る", points: { 18: 2, 9: 1 } }, { text: "苦手。自分でなんとかしちゃう", points: { 1: 3, 8: 2, 11: 2, 6: 1 } }, { text: "本当に困るまで言えない", points: { 0: 2, 4: 1 } }, { text: "相手を選んで相談する", points: { 7: 2, 3: 1, 12: 1 } }] },
+                { question: "パーティーでの役割は？", options: [{ text: "主催者・幹事", points: { 16: 3, 0: 2 } }, { text: "音楽担当（DJ）", points: { 10: 2, 9: 1 } }, { text: "料理担当", points: { 13: 2, 14: 1 } }, { text: "盛り上げ役", points: { 9: 3, 15: 2, 18: 1 } }] },
+                { question: "うわさ話、どう思う？", options: [{ text: "面白い！もっと聞きたい", points: { 2: 3, 18: 1 } }, { text: "あまりいい気はしない", points: { 8: 3, 3: 2, 0: 1 } }, { text: "信憑性を確かめる", points: { 7: 2, 13: 1 } }, { text: "興味ない", points: { 11: 3, 1: 2, 4: 1 } }] },
+                { question: "アドバイス、するのとされるのどっちが好き？", options: [{ text: "する方が好き", points: { 12: 2, 16: 2, 0: 1 } }, { text: "される方が好き", points: { 17: 2, 5: 1 } }, { text: "どっちも苦手", points: { 4: 2, 11: 1 } }, { text: "どっちも好き", points: { 18: 3, 3: 1 } }] },
+                { question: "最高のチームワークって何だと思う？", options: [{ text: "阿吽の呼吸で通じ合う", points: { 7: 2, 8: 1 } }, { text: "言いたいことを言い合える", points: { 0: 2, 15: 2, 16: 1 } }, { text: "それぞれの役割を完璧にこなす", points: { 1: 2, 12: 1 } }, { text: "とにかく仲が良い！", points: { 9: 2, 18: 2, 3: 1 } }] },
+                { question: "秘密、守れるタイプ？", options: [{ text: "墓場まで持っていく", points: { 8: 3, 7: 2, 11: 1 } }, { text: "ついポロッと言っちゃうかも…", points: { 9: 2, 2: 1, 18: 1 } }, { text: "信頼できる人にだけ話しちゃう", points: { 3: 2, 16: 1 } }, { text: "重すぎて抱えられない", points: { 10: 2, 5: 1 } }] },
+            ],
+            creative: [
+                { question: "暇なとき、つい何を考えちゃう？", options: [{ text: "壮大な物語の空想", points: { 5: 3, 10: 2 } }, { text: "今日の晩ごはん", points: { 14: 2, 1: 1 } }, { text: "悩みの解決策", points: { 13: 2, 12: 1 } }, { text: "何も考えない", points: { 11: 2, 15: 1 } }] },
+                { question: "自分だけの「秘密基地」を持つならどこ？", options: [{ text: "森の奥の図書館", points: { 4: 2, 7: 2, 17: 1 } }, { text: "星が見える屋根裏部屋", points: { 5: 3, 10: 2, 19: 1 } }, { text: "誰にも見つからない洞窟", points: { 11: 2, 1: 1 } }, { text: "みんなが集まるカフェ", points: { 9: 2, 18: 1 } }] },
+                { question: "魔法が一つ使えるなら？", options: [{ text: "動物と話せる魔法", points: { 16: 3, 3: 2, 5: 1 } }, { text: "時間を操る魔法", points: { 7: 2, 12: 1 } }, { text: "空を飛ぶ魔法", points: { 2: 2, 6: 2, 9: 1 } }, { text: "人を癒す魔法", points: { 3: 3, 10: 1 } }] },
+                { question: "「エモい」と感じるのはどんな時？", options: [{ text: "夕暮れの教室", points: { 10: 3, 5: 2 } }, { text: "誰も知らない隠れ家を見つけた時", points: { 4: 2, 11: 1 } }, { text: "仲間との何気ない会話", points: { 3: 2, 18: 1 } }, { text: "目標を達成した瞬間", points: { 1: 2, 6: 2 } }] },
+                { question: "あなたのインスピレーションの源は？", options: [{ text: "音楽や物語", points: { 10: 3, 5: 2, 9: 1 } }, { text: "自然の風景", points: { 14: 2, 16: 2, 19: 1 } }, { text: "人との会話", points: { 18: 3, 17: 1 } }, { text: "過去の経験", points: { 8: 2, 4: 1 } }] },
+                { question: "もし絵を描くなら、何を描く？", options: [{ text: "壮大なファンタジーの風景", points: { 5: 3, 14: 1 } }, { text: "可愛い動物たち", points: { 16: 2, 3: 1 } }, { text: "人物の繊細な表情", points: { 10: 2 } }, { text: "ミステリアスな抽象画", points: { 4: 3, 19: 1 } }] },
+                { question: "召喚するならどんな生き物？", options: [{ text: "伝説のドラゴン", points: { 6: 2, 5: 1 } }, { text: "もふもふの聖獣", points: { 16: 3, 3: 1 } }, { text: "気まぐれな妖精", points: { 4: 2, 2: 1 } }, { text: "全てを知る賢者", points: { 19: 2, 7: 1 } }] },
+                { question: "自分の部屋、どんな風に飾りたい？", options: [{ text: "好きなものでごちゃごちゃに", points: { 2: 2, 13: 1 } }, { text: "シンプルで落ち着く空間", points: { 11: 2, 1: 1, 7: 1 } }, { text: "おしゃれなカフェ風", points: { 9: 2, 18: 1 } }, { text: "ファンタジーな天蓋付きベッド", points: { 5: 3, 10: 1 } }] },
+                { question: "「美しい」と聞いて思い浮かぶのは？", options: [{ text: "満点の星空", points: { 5: 3, 19: 2, 10: 1 } }, { text: "鍛え上げられた剣技", points: { 8: 3, 1: 2 } }, { text: "友情の絆", points: { 0: 2, 16: 1 } }, { text: "完璧な数式", points: { 12: 2, 13: 1 } }] },
+                { question: "もし物語を書くならどんなジャンル？", options: [{ text: "友情と冒険のファンタジー", points: { 0: 2, 16: 1 } }, { text: "甘酸っぱい学園ラブストーリー", points: { 5: 2, 9: 1, 10: 1 } }, { text: "謎が謎を呼ぶミステリー", points: { 7: 3, 4: 2, 12: 1 } }, { text: "心温まる日常系ストーリー", points: { 3: 2, 14: 2 } }] },
+                { question: "自分の内面を色で表すなら？", options: [{ text: "情熱の赤", points: { 15: 3, 6: 2, 9: 1 } }, { text: "冷静の青", points: { 7: 3, 11: 2, 12: 1 } }, { text: "癒やしの緑", points: { 3: 3, 14: 2, 16: 1 } }, { text: "神秘の紫", points: { 4: 3, 5: 2, 19: 2 } }] },
+                { question: "感情表現は得意な方？", options: [{ text: "得意。顔や態度に出やすい", points: { 9: 3, 15: 2, 18: 1 } }, { text: "苦手。ポーカーフェイスと言われる", points: { 7: 3, 8: 2, 11: 1, 4: 1 } }, { text: "言葉で伝えるのは得意", points: { 10: 2, 12: 1 } }, { text: "親しい人にだけ見せる", points: { 1: 2, 3: 1 } }] },
+                { question: "小さな幸せを感じるのはどんな時？", options: [{ text: "美味しいものを食べている時", points: { 14: 3, 1: 1 } }, { text: "布団にもぐる瞬間", points: { 3: 2, 11: 1 } }, { text: "音楽を聴いている時", points: { 10: 3, 5: 1 } }, { text: "計画通りに物事が進んだ時", points: { 7: 2, 12: 1 } }] },
+                { question: "もし新しい祝日を作れるなら？", options: [{ text: "「もふもふ感謝の日」", points: { 16: 3, 3: 1 } }, { text: "「一日中好きなことをしていい日」", points: { 2: 2, 11: 2, 4: 1 } }, { text: "「みんなで冒険に出る日」", points: { 15: 2, 0: 1 } }, { text: "「未来を夢見る日」", points: { 5: 3, 19: 1 } }] },
+                { question: "よく見る夢はどんな夢？", options: [{ text: "空を飛ぶ夢", points: { 5: 2, 6: 1, 9: 1 } }, { text: "何かに追いかけられる夢", points: { 4: 2, 2: 1 } }, { text: "美味しいものを食べる夢", points: { 14: 2 } }, { text: "あまり夢は見ない", points: { 1: 2, 8: 1, 7: 1 } }] },
+                { question: "戦闘以外で欲しい超能力は？", options: [{ text: "人の心が読める", points: { 19: 3, 18: 2, 7: 1 } }, { text: "テレポート（瞬間移動）", points: { 2: 3, 11: 1 } }, { text: "食べたものがゼロカロリーになる", points: { 14: 2, 9: 1 } }, { text: "一度見たものを忘れない", points: { 17: 3, 13: 2, 12: 1 } }] },
+                { question: "古い日記帳を見つけた。どうする？", options: [{ text: "こっそり読んでしまう", points: { 2: 3, 4: 2, 17: 1 } }, { text: "持ち主に返そうとする", points: { 0: 2, 8: 1 } }, { text: "読まずにしまっておく", points: { 3: 2, 11: 1 } }, { text: "何かのお告げかも…", points: { 19: 3, 5: 2 } }] },
+                { question: "お弁当のおかず、最後に食べるのは？", options: [{ text: "一番好きなもの", points: { 5: 2, 10: 1 } }, { text: "一番嫌いなもの", points: { 1: 2, 8: 1 } }, { text: "特に決まっていない", points: { 15: 2, 18: 1 } }, { text: "バランス良く食べる", points: { 14: 2, 12: 1 } }] },
+                { question: "好きな季節は？", options: [{ text: "出会いの春", points: { 9: 2, 18: 1 } }, { text: "情熱の夏", points: { 15: 3, 2: 1 } }, { text: "物思いにふける秋", points: { 10: 3, 4: 2, 11: 1 } }, { text: "静寂の冬", points: { 7: 2, 5: 1 } }] },
+                { question: "自分のテーマソングを選ぶなら？", options: [{ text: "元気なアイドルソング", points: { 9: 3 } }, { text: "泣けるバラード", points: { 10: 3, 3: 1 } }, { text: "クールなロックナンバー", points: { 6: 2, 15: 2, 1: 1 } }, { text: "壮大なオーケストラ", points: { 5: 2, 0: 1, 8: 1 } }] },
+            ],
+            thinking: [
+                { question: "道に迷ったら、どうする？", options: [{ text: "地図やスマホで徹底的に調べる", points: { 7: 3, 13: 2 } }, { text: "人に聞く", points: { 18: 3, 9: 1 } }, { text: "勘で進む！", points: { 2: 2, 15: 2, 19: 1 } }, { text: "来た道を戻る", points: { 8: 2, 0: 1 } }] },
+                { question: "新しいことを学ぶのは好き？", options: [{ text: "大好き！すぐ試したい", points: { 17: 3, 2: 2, 12: 1 } }, { text: "必要なら学ぶ", points: { 1: 2, 7: 1 } }, { text: "教わるより自分で調べたい", points: { 13: 3, 11: 1 } }, { text: "あまり得意じゃない", points: { 15: 1, 14: 1 } }] },
+                { question: "どうして？と物事の仕組みが気になる？", options: [{ text: "すごく気になる！分解したい", points: { 13: 3, 17: 2 } }, { text: "使えればそれでいい", points: { 15: 2, 9: 1 } }, { text: "専門家に聞きたい", points: { 12: 2, 18: 1 } }, { text: "仕組みより歴史が気になる", points: { 8: 1, 5: 1 } }] },
+                { question: "旅行の計画、どう立てる？", options: [{ text: "分単位できっちり", points: { 7: 3, 12: 2, 8: 1 } }, { text: "行きたい所だけ決める", points: { 2: 2, 11: 1 } }, { text: "計画は立てない！", points: { 15: 3, 9: 1 } }, { text: "友達におまかせ", points: { 18: 2, 3: 1, 14: 1 } }] },
+                { question: "情報収集の得意なやり方は？", options: [{ text: "ネットや本で徹底的に調べる", points: { 13: 3, 17: 2, 7: 2 } }, { text: "SNSでトレンドを追う", points: { 2: 3, 9: 1 } }, { text: "口コミや友達からの情報", points: { 18: 3, 3: 1 } }, { text: "なぜか情報が舞い込んでくる", points: { 19: 3, 4: 1, 5: 1 } }] },
+                { question: "スフィンクスのなぞなぞ！どうする？", options: [{ text: "知識を総動員して解く", points: { 17: 3, 13: 2, 12: 1 } }, { text: "ひらめきで答える", points: { 2: 2, 19: 2, 4: 1 } }, { text: "力ずくで突破できないか考える", points: { 15: 3, 1: 1 } }, { text: "他の人に助けを求める", points: { 18: 2, 16: 1 } }] },
+                { question: "難しいパズル、好き？", options: [{ text: "大好き！解けるまで寝られない", points: { 13: 3, 7: 2, 1: 1 } }, { text: "まあまあ好き", points: { 12: 2, 17: 1 } }, { text: "ヒントがないと無理", points: { 5: 1, 3: 1 } }, { text: "すぐ飽きちゃう", points: { 15: 2, 9: 1, 2: 1 } }] },
+                { question: "部屋の片付けは得意？", options: [{ text: "得意！いつも綺麗", points: { 8: 2, 7: 1 } }, { text: "苦手…すぐ散らかる", points: { 2: 2, 15: 1, 10: 1 } }, { text: "やるときはやる", points: { 1: 2, 0: 1 } }, { text: "見た目だけ綺麗にする", points: { 12: 2, 18: 1 } }] },
+                { question: "好きな教科は？", options: [{ text: "国語や歴史", points: { 10: 2, 8: 1, 5: 1 } }, { text: "数学や理科", points: { 13: 3, 12: 2, 7: 1 } }, { text: "体育や音楽", points: { 1: 2, 15: 2, 9: 2 } }, { text: "全部好き！", points: { 17: 3 } }] },
+                { question: "ボードゲーム、どんな戦略で戦う？", options: [{ text: "王道・定石で堅実に", points: { 8: 2, 0: 1 } }, { text: "相手の裏をかく奇策", points: { 7: 3, 4: 2, 2: 1 } }, { text: "長期的な視点でじっくり", points: { 11: 2, 12: 1 } }, { text: "サイコロの運任せ！", points: { 15: 3, 9: 1 } }] },
+                { question: "データと直感、信じるのはどっち？", options: [{ text: "データ。事実は嘘をつかない", points: { 7: 3, 13: 2, 12: 1 } }, { text: "直感。ビビっとくる", points: { 19: 3, 2: 2, 15: 1, 5: 1 } }, { text: "両方大事", points: { 0: 2, 17: 1 } }, { text: "周りの意見を参考にする", points: { 18: 2, 16: 1, 3: 1 } }] },
+                { question: "勉強のスタイルは？", options: [{ text: "コツコツ計画的に", points: { 1: 3, 8: 2, 7: 1 } }, { text: "一夜漬けの集中型", points: { 6: 2, 15: 1 } }, { text: "友達と教え合いながら", points: { 18: 3, 17: 2 } }, { text: "好きなことしか勉強しない", points: { 4: 2, 11: 1 } }] },
+                { question: "お小遣い、どう管理してる？", options: [{ text: "きっちりお小遣い帳をつける", points: { 13: 2, 7: 1, 8: 1 } }, { text: "欲しいものがあったらすぐ使う", points: { 2: 3, 9: 2, 15: 1 } }, { text: "とりあえず貯金", points: { 1: 2, 0: 1 } }, { text: "いつの間にかなくなってる", points: { 5: 2, 10: 1 } }] },
+                { question: "事件を目撃！犯人の特徴は？", options: [{ text: "服装や髪型を正確に覚えてる", points: { 7: 3, 13: 1 } }, { text: "全体の雰囲気が印象に残ってる", points: { 10: 2, 19: 1 } }, { text: "逃げ足の速さ！", points: { 2: 2, 11: 1 } }, { text: "怖くてあまり見れなかった", points: { 3: 2, 5: 1 } }] },
+                { question: "宝の地図を発見！どうする？", options: [{ text: "すぐ冒険の準備を始める！", points: { 2: 3, 15: 2, 6: 1 } }, { text: "偽物じゃないか徹底的に調べる", points: { 7: 3, 13: 2 } }, { text: "信頼できる仲間と共有する", points: { 0: 2, 16: 2 } }, { text: "地図の謎解きを楽しむ", points: { 17: 2, 12: 1 } }] },
+                { question: "ウソを見抜くのは得意？", options: [{ text: "得意。すぐ顔に出る", points: { 19: 2, 7: 1 } }, { text: "苦手。すぐ信じちゃう", points: { 3: 3, 5: 2, 16: 1 } }, { text: "話の矛盾点を見つけるのが得意", points: { 12: 3, 13: 2 } }, { text: "あまり人を疑わない", points: { 14: 2, 0: 1 } }] },
+                { question: "魔法の薬を調合！どうする？", options: [{ text: "レシピ通りに正確に", points: { 13: 3, 8: 1 } }, { text: "ちょっとアレンジを加える", points: { 4: 2, 17: 2, 2: 1 } }, { text: "勘で色々混ぜてみる！", points: { 15: 3, 5: 1 } }, { text: "効果より色や香りを重視", points: { 10: 2, 9: 1 } }] },
+                { question: "わからないことがあったら？", options: [{ text: "納得するまで自分で調べる", points: { 13: 3, 17: 2, 11: 1 } }, { text: "詳しい人にすぐ聞く", points: { 18: 3, 2: 1 } }, { text: "とりあえず放置", points: { 14: 2, 15: 1 } }, { text: "わかったふりをする", points: { 9: 2, 4: 1 } }] },
+                { question: "行きたい博物館は？", options: [{ text: "科学博物館", points: { 13: 3, 17: 2 } }, { text: "歴史博物館", points: { 8: 2, 5: 1 } }, { text: "美術館", points: { 10: 3, 4: 1 } }, { text: "恐竜博物館", points: { 15: 2, 16: 1 } }] },
+                { question: "あなたのスマホのホーム画面は？", options: [{ text: "機能的にアプリが整理されている", points: { 7: 3, 12: 2 } }, { text: "好きな「推し」の画像", points: { 5: 2, 10: 1, 9: 1 } }, { text: "初期設定のまま", points: { 1: 2, 14: 1 } }, { text: "ごちゃごちゃ…", points: { 2: 2, 15: 1 } }] },
+            ],
+            feeling: [
+                { question: "一番落ち着く場所は？", options: [{ text: "自分の部屋", points: { 4: 3, 11: 2, 1: 1 } }, { text: "自然の中", points: { 14: 3, 16: 2, 3: 1 } }, { text: "にぎやかなカフェ", points: { 9: 2, 18: 1 } }, { text: "誰もいない静かな場所", points: { 19: 2, 10: 1, 7: 1 } }] },
+                { question: "優柔不断な方？", options: [{ text: "かなりそう思う", points: { 14: 2, 5: 2, 10: 1 } }, { text: "食べ物以外は即決！", points: { 15: 2, 1: 1 } }, { text: "時と場合による", points: { 3: 1, 18: 1 } }, { text: "あまり迷わない", points: { 0: 2, 6: 2, 8: 1, 11: 2 } }] },
+                { question: "あなたのこだわりポイントは？", options: [{ text: "ファッションや持ち物", points: { 9: 2, 4: 1, 5: 1 } }, { text: "時間の使い方", points: { 11: 3, 7: 2, 1: 1 } }, { text: "食事", points: { 14: 2, 13: 1 } }, { text: "特にないかな", points: { 18: 2, 15: 1 } }] },
+                { question: "占いやおまじない、信じる？", options: [{ text: "すごく信じる！", points: { 19: 3, 5: 2, 10: 1 } }, { text: "良いことだけ信じる", points: { 9: 2, 3: 1, 2: 1 } }, { text: "話のタネにはする", points: { 18: 2, 12: 1 } }, { text: "あまり信じない", points: { 7: 2, 1: 1, 8: 1 } }] },
+                { question: "のんびり屋だと言われる？", options: [{ text: "よく言われる", points: { 14: 3, 3: 2, 5: 1 } }, { text: "テキパキしてると言われる", points: { 12: 2, 0: 1, 7: 1 } }, { text: "時々かな", points: { 10: 1, 11: 1 } }, { text: "急ぐときは急ぐ！", points: { 15: 2, 6: 1 } }] },
+                { question: "疲れた日のご褒美は？", options: [{ text: "甘いものを食べる", points: { 3: 2, 14: 1, 1: 1 } }, { text: "ひたすら寝る", points: { 11: 2 } }, { text: "好きな音楽を聴いたり映画を観る", points: { 10: 3, 5: 2, 4: 1 } }, { text: "友達と長電話", points: { 18: 2, 9: 1 } }] },
+                { question: "好きな香りは？", options: [{ text: "甘いお菓子の香り", points: { 3: 2, 14: 1 } }, { text: "雨上がりの土の香り", points: { 16: 2, 19: 1 } }, { text: "爽やかな柑橘系の香り", points: { 2: 2, 9: 1 } }, { text: "古い本の香り", points: { 4: 2, 10: 1, 7: 1 } }] },
+                { question: "朝型？夜型？", options: [{ text: "早寝早起きの朝型", points: { 8: 2, 1: 1, 0: 1 } }, { text: "夜更かし大好き夜型", points: { 4: 3, 7: 2, 2: 1 } }, { text: "日による", points: { 14: 2 } }, { text: "気づいたら朝…", points: { 13: 2, 10: 1 } }] },
+                { question: "ストレス解消法は？", options: [{ text: "運動して汗をかく", points: { 1: 3, 15: 2, 6: 1 } }, { text: "カラオケで熱唱！", points: { 9: 3, 10: 1 } }, { text: "誰かに話を聞いてもらう", points: { 3: 2, 18: 2 } }, { text: "一人で趣味に没頭する", points: { 11: 3, 4: 2, 13: 1 } }] },
+                { question: "海と山、どっちが好き？", options: [{ text: "海！泳いだり探検したい", points: { 2: 2, 9: 1, 15: 1 } }, { text: "山！静かに過ごしたい", points: { 11: 2, 16: 2, 14: 1 } }, { text: "どっちも好き", points: { 17: 2 } }, { text: "インドア派です", points: { 4: 2, 13: 1 } }] },
+                { question: "一人時間は必要？", options: [{ text: "絶対必要！ないと無理", points: { 11: 3, 4: 2, 7: 1, 1: 1 } }, { text: "たまには欲しいかな", points: { 10: 2, 14: 1 } }, { text: "なくても平気", points: { 18: 2, 16: 1 } }, { text: "むしろ誰かとずっといたい", points: { 9: 3, 3: 1 } }] },
+                { question: "映画やドラマで泣いちゃう？", options: [{ text: "すぐ泣く。号泣する", points: { 10: 3, 3: 2, 5: 1 } }, { text: "感動して、うるっとくる", points: { 16: 2, 0: 1 } }, { text: "泣かないけど心は動いてる", points: { 8: 2, 1: 1 } }, { text: "あまり泣かない", points: { 7: 2, 11: 1, 4: 1 } }] },
+                { question: "どんなペットを飼ってみたい？", options: [{ text: "忠実な犬", points: { 8: 3, 0: 2 } }, { text: "気まぐれな猫", points: { 4: 3, 11: 1 } }, { text: "賢いフクロウ", points: { 7: 2, 19: 1 } }, { text: "珍しい生き物", points: { 17: 2, 5: 1, 16: 2 } }] },
+                { question: "好きな天気は？", options: [{ text: "雲一つない晴れ", points: { 9: 2, 15: 1 } }, { text: "しとしと降る雨", points: { 10: 3, 4: 2 } }, { text: "涼しい風が吹く曇り", points: { 14: 2, 11: 1 } }, { text: "ドラマチックな嵐", points: { 6: 2, 5: 1 } }] },
+                { question: "これだけは譲れない！ということある？", options: [{ text: "たくさんある", points: { 1: 2, 6: 2, 8: 2, 4: 1 } }, { text: "少しだけある", points: { 0: 1, 11: 1, 12: 1 } }, { text: "あまりない。人に合わせる", points: { 18: 3, 3: 2, 14: 1 } }, { text: "考えたことなかった", points: { 5: 1, 15: 1 } }] },
+                { question: "あなたのパワースポットは？", options: [{ text: "図書館や本屋さん", points: { 17: 2, 13: 1, 4: 1 } }, { text: "緑の多い公園", points: { 14: 3, 16: 2, 3: 1 } }, { text: "おしゃれなカフェ", points: { 9: 2, 5: 1 } }, { text: "自分のベッドの中", points: { 11: 2, 10: 1 } }] },
+                { question: "服や持ち物、 comfort or style?", options: [{ text: "断然、着心地や機能性！", points: { 1: 2, 13: 1, 14: 1 } }, { text: "やっぱり見た目がおしゃれなのが一番！", points: { 9: 3, 5: 2, 6: 1 } }, { text: "どっちも大事！", points: { 12: 2, 0: 1 } }, { text: "あまりこだわらない", points: { 15: 2, 18: 1 } }] },
+                { question: "恋に落ちる瞬間ってどんな時？", options: [{ text: "ギャップを見た時", points: { 6: 2, 4: 1 } }, { text: "優しくされた時", points: { 3: 3, 16: 1 } }, { text: "夢を語る姿を見た時", points: { 1: 2, 5: 2 } }, { text: "気づいたら好きになってる", points: { 10: 2, 14: 1 } }] },
+                { question: "好きな「癒やし動画」は？", options: [{ text: "かわいい動物の動画", points: { 16: 3, 3: 2 } }, { text: "職人技の動画", points: { 8: 2, 1: 1, 13: 1 } }, { text: "飯テロ動画", points: { 14: 2, 15: 1 } }, { text: "絶景の自然の動画", points: { 5: 2, 10: 1, 19: 1 } }] },
+                { question: "理想の人生のペースは？", options: [{ text: "毎日が冒険！刺激的に", points: { 2: 3, 15: 2, 6: 1 } }, { text: "目標に向かって着実に", points: { 1: 3, 8: 2, 0: 1 } }, { text: "のんびり穏やかに", points: { 14: 3, 3: 2, 11: 1 } }, { text: "気の向くままに、自由に", points: { 4: 2, 10: 1, 9: 1 } }] },
+            ]
+        };
+
+        let currentQuestionIndex = 0;
+        let questions = [];
+        let scores = new Array(characters.length).fill(0);
+
+        const startScreen = document.getElementById('start-screen');
+        const questionScreen = document.getElementById('question-screen');
+        const resultScreen = document.getElementById('result-screen');
+
+        const startButton = document.getElementById('start-button');
+        const retryButton = document.getElementById('retry-button');
+        const shareButton = document.getElementById('share-button');
+
+        startButton.addEventListener('click', startDiagnosis);
+        retryButton.addEventListener('click', startDiagnosis);
+        
+        function shuffle(array) {
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]];
+            }
+            return array;
+        }
+
+        function startDiagnosis() {
+            currentQuestionIndex = 0;
+            scores.fill(0);
+            
+            questions = [];
+            const categories = Object.keys(allQuestions);
+            categories.forEach(category => {
+                const shuffledQuestions = shuffle([...allQuestions[category]]);
+                questions.push(...shuffledQuestions.slice(0, 2)); 
+            });
+            questions = shuffle(questions);
+
+            startScreen.classList.add('hidden');
+            resultScreen.classList.add('hidden');
+            questionScreen.classList.remove('hidden');
+            document.body.className = "question-bg text-gray-800 transition-colors duration-500";
+            displayQuestion();
+        }
+        
+        function displayQuestion() {
+            if (currentQuestionIndex >= questions.length) {
+                showResult();
+                return;
+            }
+
+            const questionData = questions[currentQuestionIndex];
+            document.getElementById('question-text').textContent = `Q${currentQuestionIndex + 1}. ${questionData.question}`;
+            
+            const progressBar = document.querySelector('#progress-bar > div');
+            progressBar.style.width = `${((currentQuestionIndex) / questions.length) * 100}%`;
+
+            const optionsContainer = document.getElementById('options-container');
+            optionsContainer.innerHTML = '';
+
+            const shuffledOptions = shuffle([...questionData.options]);
+
+            shuffledOptions.forEach(option => {
+                const button = document.createElement('button');
+                button.textContent = option.text;
+                button.className = "w-full bg-white text-green-700 font-bold p-4 rounded-lg shadow-md hover:bg-green-100 transform hover:scale-105 transition-all duration-200";
+                button.onclick = () => selectOption(option);
+                optionsContainer.appendChild(button);
+            });
+        }
+
+        function selectOption(option) {
+            for (const id in option.points) {
+                scores[id] += option.points[id];
+            }
+            currentQuestionIndex++;
+            setTimeout(displayQuestion, 200);
+        }
+
+        function showResult() {
+            const maxScore = Math.max(...scores);
+            const resultIndexes = [];
+            scores.forEach((score, index) => {
+                if (score === maxScore) {
+                    resultIndexes.push(index);
+                }
+            });
+            const randomIndex = resultIndexes[Math.floor(Math.random() * resultIndexes.length)];
+            const resultCharacter = characters[randomIndex];
+
+            document.getElementById('character-name').textContent = resultCharacter.name;
+            document.getElementById('character-description').textContent = resultCharacter.description;
+            document.getElementById('character-hashtag').textContent = resultCharacter.hashtags;
+            document.getElementById('character-image').src = resultCharacter.imageUrl;
+            
+            questionScreen.classList.add('hidden');
+            resultScreen.classList.remove('hidden');
+            document.body.className = "result-bg text-gray-800 transition-colors duration-500";
+        }
+        
+        shareButton.addEventListener('click', () => {
+            const resultCharacterName = document.getElementById('character-name').textContent;
+            const text = `【異世界転生キャラ性格診断】\n私の転生キャラは「${resultCharacterName}」でした！\n\nあなたも診断してみよう！\n#異世界転生キャラ性格診断`;
+            const url = "https://my-personalities.com/"; // Replace with your actual domain
+            const twitterUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}&url=${encodeURIComponent(url)}`;
+            window.open(twitterUrl, '_blank');
+        });
+
+    </script>
+</body>
+</html>
+
+
+
