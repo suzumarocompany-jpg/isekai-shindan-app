@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>登場キャラクター紹介 - 異世界転生キャラ性格診断</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Mochiy+Pop+One&family=Zen+Maru+Gothic:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Zen Maru Gothic', sans-serif;
+            background-image: linear-gradient(to top, #a18cd1 0%, #fbc2eb 100%);
+        }
+        h1, h2, h3, .font-display {
+            font-family: 'Mochiy Pop One', sans-serif;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+        }
+        .story-text {
+            border-left: 3px solid #fbc2eb;
+            padding-left: 0.75rem;
+            margin-top: 0.75rem;
+            font-size: 0.8rem;
+            line-height: 1.5;
+        }
+    </style>
+</head>
+<body class="bg-gray-100 text-gray-800">
+
+    <div class="container mx-auto p-4 md:p-8">
+        <header class="text-center mb-8">
+            <h1 class="text-3xl md:text-4xl font-bold text-white mb-2">登場キャラクター紹介</h1>
+            <p class="text-white">診断結果に登場する、個性豊かな20人のキャラクターたちの物語です。</p>
+        </header>
+
+        <main id="character-grid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+            <!-- キャラクター情報がここに挿入されます -->
+        </main>
+
+        <footer class="text-center mt-12">
+            <a href="./index.html" class="bg-white text-pink-500 font-bold py-3 px-10 rounded-full shadow-lg hover:bg-pink-100 transform hover:scale-105 transition-all duration-300">
+                診断にもどる
+            </a>
+        </footer>
+    </div>
+
+    <script>
+        const characters = [
+            { name: "守護ライオンの「レオ」", description: "正義感が強く、仲間を守るリーダータイプ。", story: "代々王家を守る騎士の家系に生まれる。幼い頃、父が王を庇って命を落とすのを見て、自分も父のように『誰かを守る盾』になることを決意。厳しい修行の末、王国一の守護騎士となった。", imageUrl: "https://my-personalities.com/images/leo.png" },
+            { name: "拳法家の「くまモンク」", description: "努力家でストイック。決めたことは最後までやり遂げる。", story: "人里離れた山寺で育った、不器用な小熊だった。強くなりたい一心で、誰よりも早く起きて修行に明け暮れる日々。己の弱さと向き合い続けた結果、心身ともに揺るがない不動の拳法家となった。", imageUrl: "https://my-personalities.com/images/kumamonk.png" },
+            { name: "お宝ハンター「フェネック」", description: "好奇心旺盛でフットワークが軽い。", story: "砂漠の市場で、キャラバンの商人たちが語る伝説に胸を躍らせて育った。ある日、ガラクタ市で見つけた古びたコンパスが、幻の古代遺跡を指し示したことから、冒険の旅に飛び出した。", imageUrl: "https://my-personalities.com/images/fennec.png" },
+            { name: "癒しの「アルパカメイジ」", description: "優しくて思いやりがある癒し系。", story: "万病を癒すと言われる泉が湧く、穏やかな高原の村の出身。泉の水を浴びて育ったため、生まれつき癒やしの力を持つ。傷ついた小鳥を助けた時、その力が開花。人々を救うため、白魔道士の道を歩む。", imageUrl: "https://my-personalities.com/images/alpacamage.png" },
+            { name: "気まぐれ「クロネコウィッチ」", description: "ミステリアスで独特の世界観を持っている。", story: "雨の夜、一人の魔女に拾われた元野良猫。魔女の書斎に忍び込み、難解な魔導書を遊び道具にしているうちに、いつの間にか魔法を覚えてしまった。師匠は本。気まぐれで、ちょっと変わった魔法が得意。", imageUrl: "https://my-personalities.com/images/kuronekowitch.png" },
+            { name: "夢見る「ユニコーンサモナー」", description: "想像力豊かでロマンチスト。", story: "夢と現実の境目が曖昧な『霧の谷』で育った。谷に現れる幻の生き物たちと友達になりたいと強く願ううち、彼らを現実世界に呼び出す力を手に入れた。彼女の召喚術は、純粋な『信じる心』から生まれる。", imageUrl: "https://my-personalities.com/images/unicorn-summoner.png" },
+            { name: "飛翔ドラグーン「リルドラ」", description: "高い目標に向かって一直線。", story: "伝説の竜族の末裔だが、体はとても小さい。偉大な先祖に追いつくため、誰よりも高く飛ぶことを目指し、自作の鎧と槍で修行を重ねた。誇り高く、空を駆けることに誰よりも情熱を燃やす竜騎士。", imageUrl: "https://my-personalities.com/images/lildra.png" },
+            { name: "忍びの「ホークアイ」", description: "冷静沈着でポーカーフェイス。", story: "諜報活動を主とする忍びの一族に生まれ、感情を殺して生きる術を叩き込まれた。その鷹のような視力は、遠く離れた敵の動きはおろか、人の心の機微さえも見抜くという。影に生き、影から仲間を支える。", imageUrl: "https://my-personalities.com/images/hawkeye.png" },
+            { name: "忠犬サムライ「シバマル」", description: "義理人情に厚く、誠実。", story: "かつて、恩ある主人を助けるために、たった一匹で盗賊団に立ち向かったという伝説を持つ忠犬。その義の心に打たれた刀鍛冶が、彼のために小さな刀を打った。以来、主君の魂を胸に、武士道を貫く。", imageUrl: "https://my-personalities.com/images/shibamaru.png" },
+            { name: "情熱ダンサー「フラミン」", description: "明るく社交的で、常に輪の中心にいる人気者。", story: "南国のカーニバルで、伝説のダンサーの踊りを見て衝撃を受ける。踊りには、人々の心を解放し、幸せにする力があると信じ、世界中を旅する踊り子になった。彼女のステップは、どんな場所も情熱的な舞台に変える。", imageUrl: "https://my-personalities.com/images/flamin.png" },
+            { name: "歌うたい「カナリアン」", description: "感受性が豊かで芸術家肌。", story: "ある王国の宮廷音楽家だったが、形式ばった音楽に心を閉ざしてしまう。本当の『心の歌』を見つけるため、リュート一つで城を飛び出した。彼の歌声は、聞く者の心の奥に眠る、切ない記憶を呼び覚ます。", imageUrl: "https://my-personalities.com/images/canarian.png" },
+            { name: "孤高の「ホークアーチャー」", description: "独立心が強く、自分のペースを大事にする。", story: "人と群れることを嫌い、幼い頃から一人で森で暮らしてきた。生きるために身につけた弓の技術は、いつしか達人の域に。誰にも縛られず、風の音だけを頼りに獲物を射る、誇り高き森の番人。", imageUrl: "https://my-personalities.com/images/hawkarcher.png" },
+            { name: "魔法剣士「コンすけ」", description: "頭の回転が速く、要領がいい。", story: "賢い狐の一族の出身。剣術道場と魔法学園の両方に通っていたが、どちらも面倒になり、二つの技術を融合させた我流の『魔法剣』を生み出した。最短ルートで、一番カッコよく勝つのが彼の信条。", imageUrl: "https://my-personalities.com/images/konsuke.png" },
+            { name: "研究家「ハムケミスト」", description: "探究心が強く、物事を分析するのが好き。", story: "巨大な図書館の片隅で、錬金術の文献を読み漁って育った。ある日、失敗したポーションから偶然『最高に美味しいひまわりの種』を錬成。以来、世界を幸せにするアイテム作りに没頭している。", imageUrl: "https://my-personalities.com/images/hamchemist.png" },
+            { name: "のんびり「パンダジオ」", description: "自然体でマイペース。", story: "仙人が住むと言われる竹林の奥で、ただひたすら笹を食べ、昼寝をして過ごしてきた。彼の悟りは『急がず、比べず、争わず』。その存在は、周りの者たちに、生きる上で本当に大切なことは何かを思い出させてくれる。", imageUrl: "https://my-personalities.com/images/pandageo.png" },
+            { name: "突撃「ウリボウサーカー」", description: "パワフルで情熱的。", story: "考えるよりも先に体が動いてしまう、元気いっぱいのうり坊。友達を守るために、自分より何倍も大きな魔物に突進した時、内に秘めたバーサーカーの力が覚醒した。難しいことは分からないが、仲間を思う気持ちは誰にも負けない。", imageUrl: "https://my-personalities.com/images/uribourserker.png" },
+            { name: "カリスマ「ウルフマスター」", description: "動物や自然を愛する心優しいリーダー。", story: "かつては群れを追われた一匹狼だったが、傷ついた動物たちを分け隔てなく助けるうち、多くの生き物から信頼される森の王となった。言葉は通じなくとも、心で通じ合うことができると信じている。", imageUrl: "https://my-personalities.com/images/wolfmaster.png" },
+            { name: "学びの「カメレオンラーナー」", description: "学習意欲が高く、なんでも吸収しようとする。", story: "『世界中の知識を読破する』という壮大な夢を持つ。どんな環境にもすぐ馴染むカメレオンの体質を活かし、様々な国や文化に溶け込んでは、その土地の知識をスポンジのように吸収し続けている。", imageUrl: "https://my-personalities.com/images/chameleon-learner.png" },
+            { name: "ものまね「パロットマイム」", description: "コミュニケーション能力が高く、誰とでもすぐに仲良くなれる。", story: "おしゃべりなオウムだったが、ある時、言葉だけでは伝わらない想いがあることを知る。旅芸人の一座に入り、体一つで感情を表現するパントマイムを習得。今では、どんな種族とも心を通わせることができる最高のエンターテイナー。", imageUrl: "https://my-personalities.com/images/parrotmime.png" },
+            { name: "神秘の「アルマジロラクル」", description: "直感力に優れ、スピリリチュアルなことに関心がある。", story: "星の光を浴びると、未来のビジョンが見えるという不思議な力を持って生まれた。危険が迫ると、固い甲羅に閉じこもって星に祈りを捧げ、仲間たちに神託を授ける。多くは語らないが、その言葉は常に真実を射抜く。", imageUrl: "https://my-personalities.com/images/armadilloracle.png" },
+        ];
+
+        const grid = document.getElementById('character-grid');
+        characters.forEach(char => {
+            const card = document.createElement('div');
+            card.className = 'bg-white rounded-xl shadow-lg overflow-hidden flex flex-col';
+            card.innerHTML = `
+                <div class="w-full h-48 bg-purple-50 flex items-center justify-center p-2">
+                    <img src="${char.imageUrl}" alt="${char.name}" class="max-w-full max-h-full object-contain">
+                </div>
+                <div class="p-4 flex flex-col flex-grow">
+                    <h3 class="font-bold font-display text-lg text-purple-600">${char.name}</h3>
+                    <p class="text-sm text-gray-700 mt-1">${char.description}</p>
+                    <p class="story-text text-gray-500 flex-grow">${char.story}</p>
+                </div>
+            `;
+            grid.appendChild(card);
+        });
+    </script>
+</body>
+</html>
+
+
+
